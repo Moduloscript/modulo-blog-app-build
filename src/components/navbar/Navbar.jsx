@@ -1,8 +1,9 @@
-"use client"
+"use client";
 
-import React from 'react'
-import Link from "next/link"
-import styles from "./navbar.module.css"
+import React from "react";
+import Link from "next/link";
+import styles from "./navbar.module.css";
+import DarkModeToggle from "../DarkModeToggle/DarkModeToggle";
 
 const Navbar = () => {
   const links = [
@@ -39,26 +40,27 @@ const Navbar = () => {
   ];
   return (
     <div className={styles.container}>
-      <Link href="/"
-      className={styles.logo}
-      >Modulo</Link>
-        {links.map(link => (
-          <Link key={link.id} href={link.url}
-          className={styles.link}
-          >
+      <Link href="/" className={styles.logo}>
+        Modulo
+      </Link>
+      <div className={styles.links}>
+        <DarkModeToggle />
+        {links.map((link) => (
+          <Link key={link.id} href={link.url} className={styles.links}>
             {link.title}
           </Link>
         ))}
-      <button
-        className={styles.logout}
-        onClick={() =>{
-          console.log("logged out")
-        }}
-      >
-      logout
-      </button>
+        <button
+          className={styles.logout}
+          onClick={() => {
+            console.log("logged out");
+          }}
+        >
+          logout
+        </button>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
