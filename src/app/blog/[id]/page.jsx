@@ -1,68 +1,43 @@
-import Image from "next/image";
 import React from "react";
 import styles from "./page.module.css";
-import { notFound } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
 
+async function getData() {
+  const res = await fetch("http://localhost:3000/api/posts", {
+    cache: "no-store",
+  });
 
-
-async function getData(id) {
-  const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`,
-    { next: { revalidate: 10 } })
   if (!res.ok) {
-    return notFound()
+    throw new Error("Failed to fetch data");
   }
- 
-  return res.json()
 
+  return res.json();
 }
 
-const BlogPost = async ({ params }) => {
-  const data = await  getData(params.id)
+const Blog = async () => {
+  const data = await getData();
   return (
-    <div className={styles.container}>
-      <div className={styles.top}>
-        <div className={styles.info}>
-          <h1 className={styles.title}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat eos
-            commodi, dolore quisquam illo quos fuga cumque sit cum ipsam,
-            assumenda quo odit esse neque accusamus est, eius dignissimos velit?
-          </h1>
-          <p className={styles.desc}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita
-            quisquam obcaecati, deserunt illum iusto nobis et nesciunt dolore
-            nisi eveniet reiciendis repudiandae excepturi nulla quas sequi
-            beatae aut harum explicabo.
-          </p>
-          <div className={styles.author}>
+    <div className={styles.mainContainer}>
+      {data.map((item) => (
+        <Link href={`/blog/${item._id}`} className={styles.container} key={item.id}>
+          <div className={styles.imageContainer}>
             <Image
-              src="https://images.pexels.com/photos/5774802/pexels-photo-5774802.jpeg?auto=compress&cs=tinysrgb&w=600"
+              src={item.img}
               alt=""
-              width={40}
-              height={40}
-              className={styles.avatar}
+              width={400}
+              height={250}
+              className={styles.image}
             />
-            <span className={styles.username}>John Stone</span>
           </div>
-        </div>
-        <div className={styles.imageContainer}>
-          <Image
-            src="https://images.pexels.com/photos/2325446/pexels-photo-2325446.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-            alt=""
-            fill={true}
-            className={styles.image}
-          />
-        </div>
-      </div>
-      <div className={styles.content}>
-        <p className={styles.text}>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cum vitae
-          provident animi voluptatum inventore esse molestias maiores, delectus
-          aut alias ut veritatis, quia iusto odit odio necessitatibus voluptates
-          aliquam ea!
-        </p>
-      </div>
+          <div className={styles.content}>
+            <h1 className={styles.title}>{item.title}</h1>
+            <p className={styles.desc}>{item.desc}</p>
+          </div>
+        </Link>
+      ))}
     </div>
   );
 };
 
-export default BlogPost;
+export default Blog;
