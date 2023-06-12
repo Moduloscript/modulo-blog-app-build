@@ -5,7 +5,7 @@ import styles from "./page.module.css";
 
 
 async function getData() {
-  const res = await fetch('https://jsonplaceholder.typicode.com/posts', { next: { revalidate: 10 } })
+  const res = await fetch('https://localhost:3000/api/post', { next: { revalidate: 10 } })
   if (!res.ok) {
     throw new Error('Failed to fetch data')
   }
